@@ -22,8 +22,22 @@ class ProdukController extends Controller
 
     function store(ProdukRequest $request)
     {
-        $produk = Produk::create($request->all());
-        return response()->json(['msg' => 'Data created', 'data' => $produk], 201);
+        $request->validate([
+            'name' => 'required',
+            'deskripsi' => 'required',
+            'price' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        $imageName = 'produk-'.time().'.'.$request->image->extension();
+        $request->image->move(public_path('images'), $imageName);
+        $product = new Produk();
+        $product->name = $request->name;
+        $product->deskripsi = $request->deskripsi;
+        $product->price = $request->price;
+        $product->image = 'images/'.$imageName;
+        $product->save();
+        // $produk = Produk::create($product->all());
+        return response()->json(['msg' => 'Data created', 'data' => ''], 201);
     }
 
     function update($id, ProdukRequest $request)
