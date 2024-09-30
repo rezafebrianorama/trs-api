@@ -21,12 +21,15 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => [ 'required', 'string', 'email', 'max:255', Rule::unique(User::class),],
             'password' => ['required','min:8'],
+            'role'=> ['required', 'string'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'role' => $request->role,
+            'status' => 'active'
         ]);
         $token = $user->createToken('myAppToken');
 

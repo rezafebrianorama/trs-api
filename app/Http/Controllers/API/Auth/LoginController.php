@@ -19,14 +19,16 @@ class LoginController extends Controller
         ]);
 
         if (auth()->attempt($credentials)) {
-            $user = auth()->user();
+                   $user = auth()->user();
 
             return (new UserResource($user))->additional([
+                'code' => 200,
                 'token' => $user->createToken('myAppToken')->plainTextToken,
             ]);
         }
 
         return response()->json([
+            'code' => 401,
             'message' => 'Your credential does not match.',
         ], 401);
     }
